@@ -12,6 +12,9 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Support\Facades\Hash;
+use Rawilk\FilamentPasswordInput\Password;
+use Illuminate\Support\Str;
 
 class UserResource extends Resource
 {
@@ -24,7 +27,43 @@ class UserResource extends Resource
     {
         return $form
             ->schema([
-                //
+                Forms\Components\Section::make('Form User')
+                    ->description('Tambahkan user')
+                    ->schema([
+                        Forms\Components\TextInput::make('name')
+                            ->required(),
+                        Forms\Components\TextInput::make('email')
+                            ->email()
+                            ->required(),
+                        // Forms\Components\TextInput::make('username')
+                        //     ->unique(ignoreRecord: true)
+                        //     ->required(),
+                        Forms\Components\TextInput::make('phone')
+                            ->unique(ignoreRecord: true),
+                        Password::make('password')
+                            ->maxLength(255)
+                            ->nullable(fn (?string $operation) => $operation === 'edit')
+                            ->required(fn (?string $operation) => $operation === 'create')
+                            ->dehydrateStateUsing(static function (?string $state, string $operation) {
+                                if ($operation === 'create') {
+                                    return !empty($state) ? Hash::make($state) : null;
+                                } elseif ($state) {
+                                    return Hash::needsRehash($state) ? Hash::make($state) : $state;
+                                }
+                            })
+                            ->suffixAction(
+                                Forms\Components\Actions\Action::make('generate')
+                                    ->tooltip('Generate Password')
+                                    ->icon('heroicon-o-sparkles')
+                                    ->action(function (Forms\Set $set) {
+                                        $set('password', Str::random(6));
+                                    })
+                            ),
+                        // Forms\Components\Select::make('roles')
+                        //     ->multiple()
+                        //     ->preload()
+                        //     ->relationship('roles', 'name'),
+                    ])->columns(2)
             ]);
     }
 
@@ -45,7 +84,9 @@ class UserResource extends Resource
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
-            ]);
+            ])
+            ->striped()
+            ->defaultSort('created_at', 'desc');
     }
 
     public static function getRelations(): array
