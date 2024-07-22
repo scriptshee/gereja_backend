@@ -36,10 +36,10 @@ class AdminPanelProvider extends PanelProvider
             ->pages([
                 Pages\Dashboard::class,
             ])
-            ->darkMode()
+            ->darkMode(false)
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
             ->widgets([
-                Widgets\AccountWidget::class,
+//                Widgets\AccountWidget::class,
             ])
             ->maxContentWidth('full')
             ->middleware([
