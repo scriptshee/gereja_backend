@@ -3,10 +3,13 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Attandance;
 use App\Models\Event;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 
 class EventController extends Controller
 {
@@ -33,5 +36,42 @@ class EventController extends Controller
                     "updated_at" => Carbon::parse($item->updated_at)->format('d/m/Y')
                 ])
         ]);
+    }
+
+    public function attendance(Request $request, Event $event): JsonResponse
+    {
+        $userId = Attandance::query()->where('user_id', auth()->user()->id)->first();
+
+        if(isset($userId)){
+            return response()->json([
+                'message' => 'User has voted.',
+                'data' => ''
+            ], 422);
+        }
+
+        DB::beginTransaction();
+        try {
+            $attandance = Attandance::create([
+                'user_id' => auth()->user()->id,
+                'event_id' => $event->id,
+                'is_present' => $request->input('present'),
+                'is_read' => 1,
+                'read_time' => now(),
+                'note' => $request->input('note')
+            ]);
+            DB::commit();
+
+            return response()->json([
+                'message' => 'success',
+                'data' => $attandance
+            ], 201);
+
+        }catch (\Exception $th) {
+            DB::rollBack();
+            return response()->json([
+                'message' => 'Eror',
+                'data' => $th->getMessage()
+            ], 500);
+        }
     }
 }

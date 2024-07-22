@@ -16,6 +16,7 @@ Route::middleware('auth:sanctum')->group(function() {
     // Event
     Route::prefix('event')->group(function() {
         Route::get('/', [EventController::class, 'index']);
+        Route::post('/attendance/{event:id}', [EventController::class, 'attendance']);
     });
     // Blog
     Route::prefix('news')->group(function() {
