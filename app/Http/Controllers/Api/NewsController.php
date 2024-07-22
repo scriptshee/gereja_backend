@@ -11,7 +11,7 @@ class NewsController extends Controller
 {
     public function index(): JsonResponse
     {
-        $blog = Blog::query()->whereNotNull('published_date')->get()
+        $blog = Blog::query()->get()
             ->transform(fn ($item) => [
                 "id" => $item->id,
                 "thumbnail" => sprintf('%s/storage/%s', env('APP_URL'), $item->thumbnail),
