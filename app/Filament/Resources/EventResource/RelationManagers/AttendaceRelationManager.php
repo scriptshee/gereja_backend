@@ -20,16 +20,22 @@ class AttendaceRelationManager extends RelationManager
         return $form
             ->schema([
                 Forms\Components\Select::make('user_id')
-                    ->label('User')
+                    ->label('Anggota')
                     ->searchable()
                     ->required()
                     ->options(User::query()->pluck('name', 'id'))
                     ->unique(),
-                Forms\Components\Checkbox::make('is_present'),
-                Forms\Components\Checkbox::make('is_read'),
+                Forms\Components\Checkbox::make('is_present')
+                    ->label('Kehadiran'),
+                Forms\Components\Checkbox::make('is_read')
+                    ->label('Dibaca'),
                 Forms\Components\DateTimePicker::make('read_time')
+                    ->label('Tgl. Waktu dibaca')
+                    ->required()
                     ->default(now()),
                 Forms\Components\Textarea::make('note')
+                    ->label('Catatan')
+                    ->required()
 
             ])->columns(1);
     }
@@ -40,7 +46,8 @@ class AttendaceRelationManager extends RelationManager
             ->recordTitleAttribute('id')
             ->columns([
                 Tables\Columns\TextColumn::make('user.name'),
-                Tables\Columns\TextColumn::make('is_present'),
+                Tables\Columns\TextColumn::make('is_present')
+                    ->getStateUsing(fn($record) => $record->is_present ? 'Hadir' : 'Tidak Hadir'),
                 Tables\Columns\TextColumn::make('note')
                     ->wrap(),
                 Tables\Columns\TextColumn::make('read_time')
@@ -50,11 +57,14 @@ class AttendaceRelationManager extends RelationManager
                 //
             ])
             ->headerActions([
-                Tables\Actions\CreateAction::make(),
+                Tables\Actions\CreateAction::make()
+                    ->modalWidth('lg'),
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\ActionGroup::make([
+                    Tables\Actions\EditAction::make(),
+                    Tables\Actions\DeleteAction::make(),
+                ]),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
