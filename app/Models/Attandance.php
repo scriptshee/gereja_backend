@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class Attandace extends Model
+class Attandance extends Model
 {
     use HasFactory;
 
@@ -17,7 +17,7 @@ class Attandace extends Model
         'is_present',
         'is_read',
         'read_time',
-        'note',
+        'note'
     ];
 
     protected $casts = [
@@ -27,7 +27,7 @@ class Attandace extends Model
 
     public function event() : BelongsTo
     {
-        return $this->belongsTo(Event::class, 'event_id', 'id');
+        return  $this->belongsTo(Event::class, 'event_id', 'id');
     }
 
     public function user() : BelongsTo

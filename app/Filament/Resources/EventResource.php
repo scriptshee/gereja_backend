@@ -4,11 +4,13 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\EventResource\Pages;
 use App\Filament\Resources\EventResource\RelationManagers;
+use App\Models\Attandance;
 use App\Models\Event;
 use App\Models\User;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
+use Filament\Support\Enums\FontWeight;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
@@ -40,7 +42,8 @@ class EventResource extends Resource
                             ->required(),
                         Forms\Components\Textarea::make('description')
                             ->columnSpanFull()
-                            ->required(),
+                            ->required()
+                            ->maxLength(255),
                         Forms\Components\RichEditor::make('content')
                             ->columnSpanFull()
                             ->required()
@@ -54,7 +57,7 @@ class EventResource extends Resource
                         Forms\Components\Checkbox::make('is_endedtime')
                             ->label('Sampai Selesai'),
                         Forms\Components\Select::make('user_id')
-                            ->options(fn () => User::query()->pluck('name', 'id'))
+                            ->options(fn() => User::query()->pluck('name', 'id'))
                             ->default(auth()->id())
                             ->searchable()
                     ])
@@ -96,27 +99,35 @@ class EventResource extends Resource
             ->defaultSort('created_at', 'desc');
     }
 
-    // public static function infolist(Infolist $infolist): Infolist
-    // {
-    //     return $infolist
-    //         ->schema([
-    //             Infolists\Components\Split::make([
-    //                 Infolists\Components\Section::make()
-    //                     ->schema([
-    //                         Infolists\Components\ImageEntry::make('thumbnail'),
-    //                     ]),
-    //                 Infolists\Components\Section::make()
-    //                     ->schema([
-    //                         Infolists\Components\TextEntry::make('title')
-    //                     ])
-    //             ])
-    //         ]);
-    // }
+    public static function infolist(Infolist $infolist): Infolist
+    {
+        return $infolist
+            ->schema([
+                Infolists\Components\Split::make([
+                    Infolists\Components\Section::make()
+                        ->schema([
+                            Infolists\Components\TextEntry::make('title')
+                                ->weight(FontWeight::Bold),
+                            Infolists\Components\TextEntry::make('description'),
+                            Infolists\Components\TextEntry::make('content')
+                                ->html()
+                                ->columnSpanFull(),
+                        ])
+                        ->columns(2),
+                    Infolists\Components\Section::make()
+                        ->schema([
+                            Infolists\Components\ImageEntry::make('thumbnail')
+                                ->size(300),
+                        ])->grow(false),
+                ])
+
+            ])->columns(1);
+    }
 
     public static function getRelations(): array
     {
         return [
-            //
+            RelationManagers\AttendaceRelationManager::class
         ];
     }
 

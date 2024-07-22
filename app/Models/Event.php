@@ -30,7 +30,7 @@ class Event extends Model
 
     public function attendace() : HasMany
     {
-        return $this->hasMany(Attandace::class, 'event_id', 'id');
+        return $this->hasMany(Attandance::class, 'event_id', 'id');
     }
 
     public function user() : BelongsTo
