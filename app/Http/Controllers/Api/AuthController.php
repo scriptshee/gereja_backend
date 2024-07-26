@@ -11,6 +11,33 @@ use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
 {
+    public function register(Request $request) : JsonResponse
+    {
+        $validator = Validator::make($request->all(), [
+            'name' => 'required',
+            'email' => 'required|email|unique:users,email',
+            'password' => 'required',
+        ]);
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => 'error',
+                'data' => $validator->errors(),
+            ], 401);
+        }
+
+        $user = new User;
+
+        $user->fill([
+            'name' => $request->input('name'),
+            'email' => $request->input('email'),
+            'password' => Hash::make($request->input('password')),
+        ])->save();
+
+        return response()->json([
+            'message' => 'success',
+            'data' => $user
+        ], 201);
+    }
     public function login(Request $request): JsonResponse
     {
         $validator = Validator::make($request->all(), [
