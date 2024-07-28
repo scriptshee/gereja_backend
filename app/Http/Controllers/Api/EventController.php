@@ -32,6 +32,8 @@ class EventController extends Controller
                         'name' => $user->name,
                         'email' => $user->email,
                     ], $item->user),
+                    'attendace_total' => $item->attendace->count(),
+                    'is_user_attendace' => auth()->id() ?  $item->attendace->where('user_id', auth()->id())->first()?->is_present : false,
                     "created_at" =>  Carbon::parse($item->created_at)->format('d/m/Y'),
                     "updated_at" => Carbon::parse($item->updated_at)->format('d/m/Y')
                 ])

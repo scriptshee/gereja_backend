@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\EventController;
 use App\Http\Controllers\Api\NewsController;
+use App\Http\Controllers\Api\NotificationController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -23,5 +24,9 @@ Route::middleware('auth:sanctum')->group(function() {
     // Blog
     Route::prefix('news')->group(function() {
         Route::get('/', [NewsController::class, 'index']);
+    });
+    // notification
+    Route::prefix('notification')->group(function () {
+        Route::get('/', [NotificationController::class, 'index']);
     });
 });
