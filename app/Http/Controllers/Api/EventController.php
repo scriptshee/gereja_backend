@@ -42,15 +42,6 @@ class EventController extends Controller
 
     public function attendance(Request $request, Event $event): JsonResponse
     {
-        $userId = Attandance::query()->where('user_id', auth()->user()->id)->first();
-
-        if(isset($userId)){
-            return response()->json([
-                'message' => 'User has voted.',
-                'data' => ''
-            ], 422);
-        }
-
         DB::beginTransaction();
         try {
             $attandance = Attandance::create([
