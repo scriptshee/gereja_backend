@@ -11,9 +11,19 @@ class AttendaceController extends Controller
 {
     public function index() : JsonResponse
     {
-        $attendace = Attandance::query()->where('user_id', auth()->id())
+        $attendace = Attandance::with('event')
+            ->where('user_id', auth()->id())
+            ->where('is_present', true)
             ->latest()
-            ->get();
+            ->get()
+            ->transform(fn($item) => [
+                'id' => $item->id,
+                'event_id' => $item->event->id,
+                'event' => $item->event->title,
+                'event_start' => \Carbon\Carbon::parse($item->event->start_datetime)->format('d-m-Y H:i'),
+                'end_datetime' => \Carbon\Carbon::parse($item->event->end_datetime)->format('d-m-Y H:i'),
+            ]);
+
         return response()->json([
             'message' => 'success',
             'data' => $attendace

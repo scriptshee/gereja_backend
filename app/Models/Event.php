@@ -19,7 +19,6 @@ class Event extends Model
         'content',
         'start_datetime',
         'end_datetime',
-        'end_datetime',
         'is_endedtime',
         'user_id',
     ];
