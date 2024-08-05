@@ -19,11 +19,10 @@ class AttendaceController extends Controller
             ->transform(fn($item) => [
                 'id' => $item->id,
                 'event_id' => $item->event->id,
-                'event' => $item->event->title,
+                'event' => $item->event,
                 'event_start' => \Carbon\Carbon::parse($item->event->start_datetime)->format('d-m-Y H:i'),
                 'end_datetime' => \Carbon\Carbon::parse($item->event->end_datetime)->format('d-m-Y H:i'),
             ]);
-
         return response()->json([
             'message' => 'success',
             'data' => $attendace
