@@ -50,14 +50,59 @@ class Setting extends Page implements HasForms
             ->schema([
                 Forms\Components\Fieldset::make('Visi & Misi')
                     ->schema([
-                        Forms\Components\Textarea::make('visi'),
-                        Forms\Components\Textarea::make('misi'),
+                        Forms\Components\RichEditor::make('visi')
+                            ->toolbarButtons([
+                                'blockquote',
+                                'bold',
+                                'bulletList',
+                                'codeBlock',
+                                'h2',
+                                'h3',
+                                'italic',
+                                'link',
+                                'orderedList',
+                                'redo',
+                                'strike',
+                                'underline',
+                                'undo',
+                            ]),
+                        Forms\Components\RichEditor::make('misi')
+                            ->toolbarButtons([
+                                'blockquote',
+                                'bold',
+                                'bulletList',
+                                'codeBlock',
+                                'h2',
+                                'h3',
+                                'italic',
+                                'link',
+                                'orderedList',
+                                'redo',
+                                'strike',
+                                'underline',
+                                'undo',
+                            ]),
                     ])->extraAttributes([
                         'class' => 'bg-white dark:bg-gray-800',
                     ]),
                 Forms\Components\Fieldset::make('Tentang')
                     ->schema([
-                        Forms\Components\Textarea::make('about')
+                        Forms\Components\RichEditor::make('about')
+                            ->toolbarButtons([
+                                'blockquote',
+                                'bold',
+                                'bulletList',
+                                'codeBlock',
+                                'h2',
+                                'h3',
+                                'italic',
+                                'link',
+                                'orderedList',
+                                'redo',
+                                'strike',
+                                'underline',
+                                'undo',
+                            ])
                             ->label(''),
                     ])->extraAttributes([
                         'class' => 'bg-white dark:bg-gray-800',
