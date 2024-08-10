@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\EventController;
 use App\Http\Controllers\Api\NewsController;
+use App\Http\Controllers\Api\CarouselController;
 use App\Http\Controllers\Api\NotificationController;
 use App\Http\Controllers\Api\AttendaceController;
 use Illuminate\Http\Request;
@@ -33,5 +34,9 @@ Route::middleware('auth:sanctum')->group(function() {
     // Attendace
     Route::prefix('attendace')->group(function (){
        Route::get('/', [AttendaceController::class, 'index']);
+    });
+    // Carousel
+    Route::prefix('carousel')->group(function () {
+       Route::get('/', [CarouselController::class, 'index']);
     });
 });
