@@ -9,9 +9,11 @@ use Illuminate\Http\Request;
 
 class NewsController extends Controller
 {
-    public function index(): JsonResponse
+    public function index(Request $request): JsonResponse
     {
-        $blog = Blog::query()->get()
+        $blog = Blog::query()
+            ->orderBy('created_at', $request->get('sort'))
+            ->get()
             ->transform(fn ($item) => [
                 "id" => $item->id,
                 "thumbnail" => sprintf('%s/storage/%s', env('APP_URL'), $item->thumbnail),

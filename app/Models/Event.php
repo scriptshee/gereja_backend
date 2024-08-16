@@ -36,4 +36,12 @@ class Event extends Model
     {
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
+    public function scopeFilter($query, $filters)
+    {
+        $query->when($filters['sort'] ?? 'desc', function($query, $sort){
+            if($sort === 'desc'){
+                $query->latest();
+            }
+        });
+    }
 }

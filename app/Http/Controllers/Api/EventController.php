@@ -13,11 +13,14 @@ use Illuminate\Support\Facades\Validator;
 
 class EventController extends Controller
 {
-    public function index(): JsonResponse
+    public function index(Request $request): JsonResponse
     {
+
         return response()->json([
             'message' => 'success',
-            'data' => Event::query()->get()
+            'data' => Event::query()
+                ->orderBy('created_at', $request->get('sort'))
+                ->get()
                 ->transform(fn ($item) => [
                     "id" =>  $item->id,
                     "thumbnail" =>  sprintf("%s/storage/%s",env('APP_URL'), $item->thumbnail),
